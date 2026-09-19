@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aidadoc.example/schemas/cbridge-certification-decision.json",
+  "title": "cBridge CertificationDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "traceId",
+    "direction",
+    "channel",
+    "verdict",
+    "riskScore",
+    "qualityScore",
+    "reasonCodes",
+    "violations",
+    "policies",
+    "bundleHash",
+    "payloadHash",
+    "evaluator",
+    "durationMs",
+    "createdAt",
+    "failModeUsed"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "traceId": { "type": "string", "minLength": 1 },
+    "direction": { "enum": ["inbound", "outbound"] },
+    "channel": { "enum": ["web", "api", "ai", "integration"] },
+    "verdict": { "enum": ["allow", "block", "review", "sanitize"] },
+    "riskScore": { "type": "number", "minimum": 0, "maximum": 1 },
+    "qualityScore": { "type": "number", "minimum": 0, "maximum": 1 },
+    "reasonCodes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "violations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["policyId", "code", "severity", "message"],
+        "properties": {
+          "policyId": { "type": "string" },
+          "code": { "type": "string" },
+          "severity": { "enum": ["low", "medium", "high", "critical"] },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "policies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "version", "hash"],
+        "properties": {
+          "id": { "type": "string" },
+          "version": { "type": "string" },
+          "hash": { "type": "string" }
+        }
+      }
+    },
+    "bundleHash": { "type": "string" },
+    "payloadHash": { "type": "string" },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model"],
+      "properties": {
+        "provider": { "type": "string" },
+        "model": { "type": "string" }
+      }
+    },
+    "durationMs": { "type": "number", "minimum": 0 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "failModeUsed": { "type": "boolean" },
+    "sanitizedContent": {}
+  }
+}
